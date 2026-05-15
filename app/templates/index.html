@@ -1,10 +1,17 @@
 {% extends "layouts/base.html" %} {% block title %}RestroPro - Home{% endblock
 %} {% block content %}
-<div class="text-center mt-5">
-  <h1 class="display-3">🍽️ Welcome to RestroPro</h1>
-  <p class="lead">Modern Restaurant Management System</p>
-  <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg mt-4"
-    >Login to System</a
-  >
+<div class="text-center mt-5 py-5">
+  <h1 class="display-1 fw-bold text-white">🍽️ RestroPro</h1>
+  <p class="lead text-light fs-3">Modern Restaurant Management System</p>
+  <div class="mt-4">
+    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-5"
+      >Login to System</a
+    >
+    <a
+      href="{{ url_for('auth.register') }}"
+      class="btn btn-outline-light btn-lg px-5 ms-3"
+      >Create Account</a
+    >
+  </div>
 </div>
 {% endblock %}

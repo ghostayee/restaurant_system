@@ -1,8 +1,8 @@
 {% extends "layouts/base.html" %} {% block title %}Register - RestroPro{%
 endblock %} {% block content %}
 <div class="row justify-content-center mt-5">
-  <div class="col-md-6">
-    <div class="card shadow-lg">
+  <div class="col-lg-6 col-md-8">
+    <div class="card shadow-lg border-0">
       <div
         class="card-header text-center py-4"
         style="
@@ -10,11 +10,10 @@ endblock %} {% block content %}
           color: white;
         "
       >
-        <h2 class="mb-0">🍽️ Join RestroPro</h2>
-        <p class="mb-0">Create your staff account</p>
+        <h2 class="mb-1">🍽️ Create Staff Account</h2>
+        <p class="mb-0">Join the RestroPro Team</p>
       </div>
-
-      <div class="card-body p-4">
+      <div class="card-body p-5">
         {% with messages = get_flashed_messages(with_categories=true) %} {% if
         messages %} {% for category, message in messages %}
         <div class="alert alert-{{ category }} alert-dismissible fade show">
@@ -28,21 +27,19 @@ endblock %} {% block content %}
         {% endfor %} {% endif %} {% endwith %}
 
         <form method="POST">
-          <div class="row">
-            <div class="col-md-12 mb-3">
-              <label class="form-label">Full Name</label>
-              <input
-                type="text"
-                name="full_name"
-                class="form-control form-control-lg"
-                required
-              />
-            </div>
+          <div class="mb-3">
+            <label class="form-label fw-bold">Full Name</label>
+            <input
+              type="text"
+              name="full_name"
+              class="form-control form-control-lg"
+              required
+            />
           </div>
 
           <div class="row">
             <div class="col-md-6 mb-3">
-              <label class="form-label">Username</label>
+              <label class="form-label fw-bold">Username</label>
               <input
                 type="text"
                 name="username"
@@ -51,7 +48,7 @@ endblock %} {% block content %}
               />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label">Email</label>
+              <label class="form-label fw-bold">Email</label>
               <input
                 type="email"
                 name="email"
@@ -62,7 +59,7 @@ endblock %} {% block content %}
           </div>
 
           <div class="mb-3">
-            <label class="form-label">Password</label>
+            <label class="form-label fw-bold">Password</label>
             <input
               type="password"
               name="password"
@@ -72,21 +69,21 @@ endblock %} {% block content %}
           </div>
 
           <div class="mb-4">
-            <label class="form-label">Your Role</label>
+            <label class="form-label fw-bold">Role</label>
             <select name="role" class="form-select form-select-lg">
               <option value="waiter">Waiter</option>
-              <option value="chef">Kitchen Chef</option>
+              <option value="chef">Chef / Kitchen Staff</option>
               <option value="store_manager">Store Manager</option>
               <option value="admin">Administrator</option>
             </select>
           </div>
 
-          <button type="submit" class="btn btn-success btn-lg w-100 mb-3">
+          <button type="submit" class="btn btn-success btn-lg w-100 py-3">
             Create Account
           </button>
         </form>
 
-        <div class="text-center">
+        <div class="text-center mt-4">
           <p>
             Already have an account?
             <a href="{{ url_for('auth.login') }}" class="text-accent fw-bold"

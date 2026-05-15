@@ -1,46 +1,66 @@
-{% extends "layouts/base.html" %}
-
-{% block title %}Login - RestroPro{% endblock %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block title %}Login - RestroPro{% endblock
+%} {% block content %}
 <div class="row justify-content-center mt-5">
-    <div class="col-md-5">
-        <div class="card shadow-lg">
-            <div class="card-header text-center py-4" style="background: linear-gradient(135deg, #FF6B00, #FF8C00); color: white;">
-                <h2 class="mb-0">🍽️ Welcome Back</h2>
-                <p class="mb-0">Sign in to access your restaurant dashboard</p>
-            </div>
-            <div class="card-body p-4">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }} alert-dismissible fade show">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-
-                <form method="POST">
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control form-control-lg" required autofocus>
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control form-control-lg" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-lg w-100">Login</button>
-                </form>
-
-                <div class="text-center mt-4">
-                    <p>Don't have an account? 
-                        <a href="{{ url_for('auth.register') }}" class="text-accent">Register Here</a>
-                    </p>
-                </div>
-            </div>
+  <div class="col-lg-5 col-md-7">
+    <div class="card shadow-lg border-0">
+      <div
+        class="card-header text-center py-4"
+        style="
+          background: linear-gradient(135deg, #ff6b00, #ff8c00);
+          color: white;
+        "
+      >
+        <h2 class="mb-1">🍽️ Welcome Back</h2>
+        <p class="mb-0">Sign in to manage your restaurant</p>
+      </div>
+      <div class="card-body p-5">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if
+        messages %} {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show">
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
         </div>
+        {% endfor %} {% endif %} {% endwith %}
+
+        <form method="POST">
+          <div class="mb-4">
+            <label class="form-label fw-bold">Username</label>
+            <input
+              type="text"
+              name="username"
+              class="form-control form-control-lg"
+              required
+              autofocus
+            />
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-bold">Password</label>
+            <input
+              type="password"
+              name="password"
+              class="form-control form-control-lg"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+            Login
+          </button>
+        </form>
+
+        <div class="text-center mt-4">
+          <p>
+            Don't have an account?
+            <a href="{{ url_for('auth.register') }}" class="text-accent fw-bold"
+              >Register Now</a
+            >
+          </p>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
