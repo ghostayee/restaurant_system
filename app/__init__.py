@@ -4,13 +4,12 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_socketio import SocketIO
 
-# extensions
+# Extensions
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
 socketio = SocketIO()
 
-# Login Manager Configuration
 login_manager.login_view = "auth.login"
 login_manager.login_message_category = "info"
 
@@ -19,13 +18,13 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object("config.Config")
 
-    # Initialize extensions with app
+    # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
     login_manager.init_app(app)
     socketio.init_app(app)
 
-        # Register Models
+    # Register Models
     with app.app_context():
         import app.models.user
 
@@ -39,7 +38,7 @@ def create_app():
     return app
 
 
-# User Loader (Must be outside create_app)
+# User Loader
 @login_manager.user_loader
 def load_user(user_id):
     from app.models.user import User
