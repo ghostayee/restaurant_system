@@ -1,0 +1,10 @@
+{% extends "layouts/base.html" %} {% block title %}RestroPro - Home{% endblock
+%} {% block content %}
+<div class="text-center mt-5">
+  <h1 class="display-3">🍽️ Welcome to RestroPro</h1>
+  <p class="lead">Modern Restaurant Management System</p>
+  <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg mt-4"
+    >Login to System</a
+  >
+</div>
+{% endblock %}
