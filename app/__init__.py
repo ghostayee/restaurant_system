@@ -25,19 +25,21 @@ def create_app():
     login_manager.init_app(app)
     socketio.init_app(app)
 
-    #Register Models
+        # Register Models
     with app.app_context():
-        from app.models.user import User  # This registers the User model
+        import app.models.user
 
-    #Register Blueprints
-    from app.routes.auth_routes import auth  # We'll create this soon
+    # Register Blueprints
+    from app.routes.auth_routes import auth
+    from app.routes.main_routes import main
 
     app.register_blueprint(auth)
+    app.register_blueprint(main)
 
     return app
 
 
-# ==================== User Loader (Must be outside create_app) ====================
+# User Loader (Must be outside create_app)
 @login_manager.user_loader
 def load_user(user_id):
     from app.models.user import User
