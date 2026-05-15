@@ -1,0 +1,30 @@
+{% extends "layouts/base.html" %} {% block title %}RestroPro - Order Now{%
+endblock %} {% block content %}
+<div
+  class="hero text-center py-5"
+  style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('{{ url_for('static', filename='images/hero.jpg') }}'); background-size: cover; color: white;"
+>
+  <h1 class="display-3 fw-bold">Welcome to Our Restaurant</h1>
+  <p class="lead fs-3">Delicious food • Fast service • Great experience</p>
+  <a
+    href="{{ url_for('customer.menu') }}"
+    class="btn btn-warning btn-lg px-5 py-3 mt-4"
+    >View Menu & Order</a
+  >
+</div>
+
+<div class="container mt-5">
+  <h2 class="text-center mb-4">How It Works</h2>
+  <div class="row text-center">
+    <div class="col-md-4">
+      <h4>1. Browse Menu</h4>
+    </div>
+    <div class="col-md-4">
+      <h4>2. Place Order</h4>
+    </div>
+    <div class="col-md-4">
+      <h4>3. Track Live</h4>
+    </div>
+  </div>
+</div>
+{% endblock %}
