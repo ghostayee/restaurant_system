@@ -1,391 +1,128 @@
 {% extends "layouts/base.html" %} {% block title %}Customer Register -
 RestroPro{% endblock %} {% block content %}
 <style>
-  :root {
-    /* Original brand vars preserved */
-    --brand-dark: #0a3d1f;
-    --brand-darker: #166534;
-    --sidebar-start: #0f2c1e;
-    --sidebar-end: #0a3d1f;
-    --sidebar-accent: #16a34a;
-    --secondary-bg: #15803d;
-    --text-light: #ffffff;
-
-    /* Ocean theme */
-    --abyss: #03132a;
-    --deep: #062a4a;
-    --ocean: #0b4f7a;
-    --tide: #0ea5e9;
-    --foam: #7dd3fc;
-    --sand: #fde9c9;
-    --coral: #fb7185;
-    --gold: #fbbf24;
+  :root{
+    --ink:#000000;
+    --line:#1a1a1a;
+    --yellow:#ffd400;
+    --yellow-2:#e6bf00;
+    --white:#ffffff;
+    --muted:#9a9a9a;
+    --danger:#ff4d4f;
+    --ok:#22c55e;
   }
 
-  .ocean-wrap {
-    min-height: 100vh;
-    padding: 60px 0 80px;
-    background-image: url("/app/static/images/welcome.jpg")
-      radial-gradient(
-        900px 500px at 90% 10%,
-        rgba(125, 211, 252, 0.18),
-        transparent 60%
-      ),
-      radial-gradient(
-        1000px 700px at 50% 110%,
-        rgba(11, 79, 122, 0.55),
-        transparent 70%
-      ),
-      linear-gradient(180deg, #03132a 0%, #062a4a 55%, #0b4f7a 100%);
-    position: relative;
-    overflow: hidden;
-    color: var(--text-light);
+  *{ box-sizing:border-box; }
+
+  .kb-shell{
+    min-height:100vh;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:48px 20px;
+    background:#000 url("/app/static/images/kilifi-bridge.jpg") center/cover no-repeat fixed;
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, sans-serif;
+    color: var(--white);
   }
-  .ocean-wrap::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(
-      rgba(255, 255, 255, 0.05) 1px,
-      transparent 1px
-    );
-    background-size: 22px 22px;
-    opacity: 0.35;
-    pointer-events: none;
-  }
-  .float-emoji {
-    position: absolute;
-    font-size: 28px;
-    opacity: 0.5;
-    animation: bob 7s ease-in-out infinite;
-  }
-  .float-emoji.e1 {
-    top: 8%;
-    left: 6%;
-    animation-delay: 0s;
-  }
-  .float-emoji.e2 {
-    top: 18%;
-    right: 8%;
-    animation-delay: 1.4s;
-  }
-  .float-emoji.e3 {
-    bottom: 12%;
-    left: 10%;
-    animation-delay: 2.6s;
-  }
-  .float-emoji.e4 {
-    bottom: 20%;
-    right: 12%;
-    animation-delay: 3.8s;
-  }
-  @keyframes bob {
-    0%,
-    100% {
-      transform: translateY(0) rotate(0);
-    }
-    50% {
-      transform: translateY(-14px) rotate(6deg);
-    }
+  .kb-shell::before{
+    content:""; position:absolute; inset:0;
+    background: rgba(0,0,0,.72);
+    z-index:0;
   }
 
-  .wave-divider {
-    display: block;
-    width: 100%;
-    height: 70px;
-  }
-
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    border-radius: 999px;
-    background: linear-gradient(
-      135deg,
-      rgba(14, 165, 233, 0.25),
-      rgba(125, 211, 252, 0.15)
-    );
-    border: 1px solid rgba(125, 211, 252, 0.35);
-    color: var(--foam);
-    font-weight: 600;
-    letter-spacing: 0.3px;
-  }
-  .hero h1 {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 800;
-    background: linear-gradient(135deg, #ffffff 0%, #7dd3fc 50%, #fde9c9 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin: 18px 0 10px;
-  }
-  .hero p {
-    color: rgba(255, 255, 255, 0.78);
-    max-width: 620px;
-    margin: 0 auto;
-  }
-
-  .ocean-card {
-    background: linear-gradient(
-      160deg,
-      rgba(255, 255, 255, 0.06),
-      rgba(255, 255, 255, 0.02)
-    );
-    border: 1px solid rgba(125, 211, 252, 0.18);
-    border-radius: 24px;
-    padding: 36px;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow:
-      0 30px 70px rgba(3, 19, 42, 0.55),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  }
-
-  .form-floating-ocean {
-    position: relative;
-    margin-bottom: 18px;
-  }
-  .form-floating-ocean label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--foam);
-    font-weight: 600;
-    margin-bottom: 8px;
-    font-size: 0.92rem;
-  }
-  .form-floating-ocean label svg,
-  .form-floating-ocean label i {
-    color: var(--tide);
-  }
-
-  .form-control-ocean {
-    width: 100%;
-    background: rgba(3, 19, 42, 0.55);
-    border: 1px solid rgba(125, 211, 252, 0.25);
-    color: #fff;
+  .kb-card{
+    position:relative; z-index:1;
+    width:100%; max-width: 440px;
+    background: var(--ink);
+    border: 1px solid var(--line);
+    border-top: 4px solid var(--yellow);
     border-radius: 14px;
-    padding: 13px 44px 13px 16px;
-    transition: all 0.25s ease;
-  }
-  .form-control-ocean::placeholder {
-    color: rgba(255, 255, 255, 0.45);
-  }
-  .form-control-ocean:focus {
-    outline: none;
-    border-color: var(--tide);
-    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.18);
-    background: rgba(3, 19, 42, 0.75);
+    padding: 40px 36px;
+    box-shadow: 0 30px 80px rgba(0,0,0,.6);
   }
 
-  .field-toggle {
-    position: absolute;
-    right: 10px;
-    top: 38px;
-    background: transparent;
-    border: 0;
-    color: var(--foam);
-    padding: 6px 8px;
-    border-radius: 8px;
-    cursor: pointer;
+  .kb-brand{
+    display:flex; align-items:center; gap:10px;
+    margin-bottom: 24px;
   }
-  .field-toggle:hover {
-    background: rgba(125, 211, 252, 0.12);
+  .kb-brand .dot{
+    width:34px; height:34px; border-radius:8px;
+    background: var(--yellow); color:#000;
+    display:grid; place-items:center; font-weight:900; font-size:18px;
+  }
+  .kb-brand .name{ font-weight:800; letter-spacing:.5px; font-size:1.05rem; }
+  .kb-brand .name span{ color: var(--yellow); }
+
+  .kb-head h1{
+    font-size: 1.7rem; font-weight:800; margin:0 0 6px;
+    line-height:1.2; letter-spacing:-.3px;
+  }
+  .kb-head p{ color: var(--muted); margin:0 0 26px; font-size:.92rem; }
+
+  .flash{
+    padding:10px 14px; border-radius:8px; margin-bottom:14px;
+    background:#1a1a1a; border:1px solid #2a2a2a;
+    color:#fff; font-size:.88rem;
+  }
+  .flash.success{ border-color: var(--ok); color: var(--ok); }
+  .flash.error, .flash.danger{ border-color: var(--danger); color: var(--danger); }
+
+  .field{ position:relative; margin-bottom:18px; }
+  .field label{
+    display:block; font-size:.82rem; font-weight:600;
+    margin-bottom:6px; color:#e6e6e6; letter-spacing:.2px;
+  }
+  .control{
+    width:100%; padding: 12px 14px;
+    background:#0a0a0a; color:#fff;
+    border:1px solid #222; border-radius:8px;
+    font-size:.95rem; outline:none;
+    transition: border-color .15s, background .15s;
+  }
+  .control::placeholder{ color:#555; }
+  .control:focus{ border-color: var(--yellow); background:#0d0d0d; }
+  .toggle{
+    position:absolute; right:10px; top:34px;
+    background:transparent; border:0; color: var(--yellow);
+    cursor:pointer; font-size:1rem; padding:4px 8px;
   }
 
-  /* Avatar uploader */
-  .avatar-uploader {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 16px;
-    border-radius: 18px;
-    background: rgba(3, 19, 42, 0.45);
-    border: 1px dashed rgba(125, 211, 252, 0.35);
-    margin-bottom: 22px;
+  .row-between{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom: 20px; font-size:.85rem;
   }
-  .avatar-preview {
-    width: 78px;
-    height: 78px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--tide), var(--deep));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 30px;
-    font-weight: 700;
-    box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
-    overflow: hidden;
-    flex-shrink: 0;
+  .remember{ display:flex; align-items:center; gap:8px; color:#d4d4d4; cursor:pointer; }
+  .remember input{ accent-color: var(--yellow); width:14px; height:14px; }
+  .forgot{ color: var(--yellow); text-decoration:none; font-weight:600; }
+  .forgot:hover{ text-decoration:underline; }
+
+  .btn-submit{
+    width:100%; padding: 13px 18px;
+    background: var(--yellow); color:#000;
+    border:0; border-radius:8px;
+    font-weight:800; font-size:.98rem; letter-spacing:.3px;
+    cursor:pointer; transition: background .15s;
   }
-  .avatar-preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .btn-submit:hover{ background: var(--yellow-2); }
+
+  .divider{
+    display:flex; align-items:center; gap:12px;
+    margin: 22px 0 18px; color: var(--muted); font-size:.78rem;
   }
-  .avatar-hint {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.88rem;
-  }
-  .avatar-hint b {
-    color: var(--foam);
-  }
-  .avatar-input {
-    display: none;
-  }
-  .avatar-pick-btn {
-    background: linear-gradient(135deg, var(--tide), var(--ocean));
-    border: 0;
-    color: #fff;
-    padding: 9px 16px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
+  .divider::before, .divider::after{
+    content:""; flex:1; height:1px; background:#222;
   }
 
-  /* Strength meter */
-  .strength-meter {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
+  .alt-link{
+    text-align:center; color: var(--muted); font-size:.88rem;
   }
-  .strength-meter span {
-    flex: 1;
-    height: 6px;
-    border-radius: 6px;
-    background: rgba(125, 211, 252, 0.15);
-    transition: background 0.25s ease;
-  }
-  .strength-meter.s1 span:nth-child(1) {
-    background: var(--coral);
-  }
-  .strength-meter.s2 span:nth-child(-n + 2) {
-    background: var(--gold);
-  }
-  .strength-meter.s3 span:nth-child(-n + 3) {
-    background: var(--foam);
-  }
-  .strength-meter.s4 span {
-    background: var(--sidebar-accent);
-  }
-  .strength-label {
-    font-size: 0.82rem;
-    margin-top: 6px;
-    color: rgba(255, 255, 255, 0.7);
-  }
+  .alt-link a{ color: var(--yellow); font-weight:700; text-decoration:none; }
+  .alt-link a:hover{ text-decoration:underline; }
 
-  /* Verify notice */
-  .verify-notice {
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    padding: 14px 16px;
-    border-radius: 14px;
-    background: linear-gradient(
-      135deg,
-      rgba(14, 165, 233, 0.18),
-      rgba(125, 211, 252, 0.06)
-    );
-    border: 1px solid rgba(125, 211, 252, 0.3);
-    color: rgba(255, 255, 255, 0.9);
-    margin: 8px 0 22px;
-  }
-  .verify-notice .ico {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(14, 165, 233, 0.25);
-    color: var(--foam);
-    font-size: 18px;
-  }
-  .verify-notice b {
-    color: var(--foam);
-  }
-
-  .btn-ocean {
-    background: linear-gradient(
-      135deg,
-      var(--tide) 0%,
-      var(--ocean) 60%,
-      var(--deep) 100%
-    );
-    border: 0;
-    color: #fff;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    border-radius: 14px;
-    box-shadow: 0 18px 40px rgba(14, 165, 233, 0.4);
-    transition:
-      transform 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-  .btn-ocean:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 22px 50px rgba(14, 165, 233, 0.55);
-    color: #fff;
-  }
-
-  /* Perks */
-  .perks {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin-top: 28px;
-  }
-  .perk-chip {
-    padding: 16px;
-    border-radius: 16px;
-    text-align: center;
-    background: linear-gradient(
-      160deg,
-      rgba(255, 255, 255, 0.06),
-      rgba(125, 211, 252, 0.04)
-    );
-    border: 1px solid rgba(125, 211, 252, 0.18);
-    color: rgba(255, 255, 255, 0.85);
-  }
-  .perk-chip .emoji {
-    font-size: 26px;
-    display: block;
-    margin-bottom: 6px;
-  }
-  .perk-chip b {
-    color: var(--foam);
-    display: block;
-    margin-bottom: 2px;
-  }
-  .perk-chip small {
-    color: rgba(255, 255, 255, 0.65);
-  }
-
-  .text-accent {
-    color: var(--foam) !important;
-  }
-  .login-link a {
-    color: var(--foam);
-  }
-  .login-link a:hover {
-    color: #fff;
-    text-decoration: underline;
-  }
-
-  @media (max-width: 768px) {
-    .ocean-card {
-      padding: 24px;
-    }
-    .perks {
-      grid-template-columns: 1fr;
-    }
-    .avatar-uploader {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  @media (max-width:480px){
+    .kb-card{ padding: 30px 22px; }
+    .kb-head h1{ font-size:1.4rem; }
   }
 </style>
 
