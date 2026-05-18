@@ -1,103 +1,120 @@
-{% extends "layouts/base.html" %}
-
-{% block title %}Customer Login - RestroPro{% endblock %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block title %}Customer Login - RestroPro{%
+endblock %} {% block content %}
 
 <div class="login-container">
-    <!-- Left Side - Image -->
-    <div class="login-image">
-        <div class="overlay"></div>
-        <div class="welcome-text">
-            <h1>Welcome Back</h1>
-            <p>Sign in to track your orders and enjoy faster service at our restaurant</p>
-        </div>
+  <!-- Left Side - Food Image with Welcome Text -->
+  <div class="login-image">
+    <div class="overlay"></div>
+    <div class="welcome-text">
+      <h1>Welcome Back</h1>
+      <p>Sign in to track your orders and enjoy faster service</p>
     </div>
+  </div>
 
-    <!-- Right Side - Login Form -->
-    <div class="login-form-container">
-        <div class="login-form">
-            <div class="brand">
-                <span class="dot">🍽️</span>
-                <span class="name">RESTRO<span>PRO</span></span>
-            </div>
+  <!-- Right Side - Login Form -->
+  <div class="login-form-container">
+    <div class="login-form">
+      <div class="brand">
+        <span class="name text-center">RESTRO<span>PRO</span></span>
+      </div>
 
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="flash {{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
 
-            <form method="POST">
-                <div class="field">
-                    <label>Email Address</label>
-                    <input type="email" name="email" class="control" placeholder="you@example.com" required autofocus>
-                </div>
-
-                <div class="field">
-                    <label>Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" name="password" class="control" placeholder="Enter your password" required>
-                        <button type="button" class="toggle" onclick="togglePassword()">👁</button>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit">Sign In</button>
-            </form>
-
-            <div class="divider">NEW HERE?</div>
-
-            <div class="alt-link">
-                Don't have an account? 
-                <a href="{{ url_for('customer.register') }}">Create one</a>
-            </div>
+      <form method="POST">
+        <div class="field">
+          <label>Email Address</label>
+          <input
+            type="email"
+            name="email"
+            class="control"
+            placeholder="you@example.com"
+            required
+            autofocus
+          />
         </div>
+
+        <div class="field">
+          <label>Password</label>
+          <div class="password-wrapper">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              class="control"
+              placeholder="Enter your password"
+              required
+            />
+            <button type="button" class="toggle" onclick="togglePassword()">
+              👁
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Sign In</button>
+      </form>
+
+      <div class="divider">NEW HERE?</div>
+
+      <div class="alt-link">
+        Don't have an account?
+        <a href="{{ url_for('customer.register') }}">Create one</a>
+      </div>
     </div>
+  </div>
 </div>
 
 <style>
   .login-container {
     min-height: 100vh;
     display: flex;
-    background: #000;
+    background: #000
+      url('{{ url_for("static", filename="images/food.jpg") }}')
+      center/cover no-repeat fixed;
   }
 
   .login-image {
     flex: 1;
-    background: url('/app/static/images/kilifi-creek3.webp') center/cover no-repeat;
+    background: url('{{ url_for("static", filename="images/platter.jpg") }}')
+      center/cover no-repeat;
     position: relative;
     display: none;
   }
 
   @media (min-width: 992px) {
-    .login-image { display: block; }
+    .login-image {
+      display: block;
+    }
   }
 
   .login-image .overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(0, 0, 0, 0.75));
+    background: rgba(0, 0, 0, 0.65);
   }
 
   .welcome-text {
     position: absolute;
-    bottom: 15%;
-    left: 10%;
-    right: 10%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
     color: white;
     z-index: 2;
+    padding: 20px;
   }
 
   .welcome-text h1 {
-    font-size: 2.8rem;
+    font-size: 3rem;
     font-weight: 800;
     margin-bottom: 12px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
   }
 
   .welcome-text p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     opacity: 0.95;
   }
 
@@ -107,7 +124,7 @@
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
-    background: #0a0a0a;
+    background: rgba(10, 10, 10, 0.95);
   }
 
   .login-form {
@@ -122,7 +139,8 @@
     margin-bottom: 32px;
   }
   .brand .dot {
-    width: 48px; height: 48px;
+    width: 48px;
+    height: 48px;
     background: #ffd400;
     color: #000;
     border-radius: 12px;
@@ -135,11 +153,18 @@
     font-weight: 800;
     letter-spacing: 1px;
   }
-  .brand .name span { color: #ffd400; }
+  .brand .name span {
+    color: #ffd400;
+  }
 
-  .flash { padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; }
-
-  .field { margin-bottom: 22px; }
+  .flash {
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  .field {
+    margin-bottom: 22px;
+  }
   .field label {
     display: block;
     margin-bottom: 6px;
@@ -147,7 +172,9 @@
     color: #ddd;
   }
 
-  .password-wrapper { position: relative; }
+  .password-wrapper {
+    position: relative;
+  }
   .control {
     width: 100%;
     padding: 14px 16px;
@@ -156,7 +183,10 @@
     border-radius: 10px;
     color: white;
   }
-  .control:focus { border-color: #ffd400; outline: none; }
+  .control:focus {
+    border-color: #ffd400;
+    outline: none;
+  }
 
   .toggle {
     position: absolute;
@@ -179,27 +209,27 @@
     border-radius: 10px;
     font-weight: 800;
     font-size: 1.1rem;
-    margin-top: 10px;
   }
 
   .divider {
     text-align: center;
     margin: 30px 0;
     color: #888;
-    font-size: 0.9rem;
   }
-
   .alt-link {
     text-align: center;
     color: #aaa;
   }
-  .alt-link a { color: #ffd400; font-weight: 700; }
+  .alt-link a {
+    color: #ffd400;
+    font-weight: 700;
+  }
 </style>
 
 <script>
   function togglePassword() {
-    const pw = document.getElementById('password');
-    const toggle = document.querySelector('.toggle');
+    const pw = document.getElementById("password");
+    const toggle = document.querySelector(".toggle");
     if (pw.type === "password") {
       pw.type = "text";
       toggle.textContent = "🙈";
