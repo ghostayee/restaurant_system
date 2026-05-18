@@ -1,89 +1,620 @@
 {% extends "layouts/base.html" %} {% block title %}Customer Register -
 RestroPro{% endblock %} {% block content %}
-<div class="row justify-content-center mt-5">
-  <div class="col-lg-6 col-md-8">
-    <div class="card shadow-lg border-0">
-      <div
-        class="card-header text-center py-4"
-        style="
-          background: linear-gradient(135deg, #22c55e, #4ade80);
-          color: white;
-        "
-      >
-        <h2 class="mb-1">Join RestroPro</h2>
-        <p class="mb-0">Create your account to order easily</p>
-      </div>
-      <div class="card-body p-5">
-        {% with messages = get_flashed_messages(with_categories=true) %} {% if
-        messages %} {% for category, message in messages %}
-        <div class="alert alert-{{ category }} alert-dismissible fade show">
-          {{ message }}
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="alert"
-          ></button>
+<style>
+  :root {
+    /* Original brand vars preserved */
+    --brand-dark: #0a3d1f;
+    --brand-darker: #166534;
+    --sidebar-start: #0f2c1e;
+    --sidebar-end: #0a3d1f;
+    --sidebar-accent: #16a34a;
+    --secondary-bg: #15803d;
+    --text-light: #ffffff;
+
+    /* Ocean theme */
+    --abyss: #03132a;
+    --deep: #062a4a;
+    --ocean: #0b4f7a;
+    --tide: #0ea5e9;
+    --foam: #7dd3fc;
+    --sand: #fde9c9;
+    --coral: #fb7185;
+    --gold: #fbbf24;
+  }
+
+  .ocean-wrap {
+    min-height: 100vh;
+    padding: 60px 0 80px;
+    background-image: url("/app/static/images/welcome.jpg")
+      radial-gradient(
+        900px 500px at 90% 10%,
+        rgba(125, 211, 252, 0.18),
+        transparent 60%
+      ),
+      radial-gradient(
+        1000px 700px at 50% 110%,
+        rgba(11, 79, 122, 0.55),
+        transparent 70%
+      ),
+      linear-gradient(180deg, #03132a 0%, #062a4a 55%, #0b4f7a 100%);
+    position: relative;
+    overflow: hidden;
+    color: var(--text-light);
+  }
+  .ocean-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    );
+    background-size: 22px 22px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .float-emoji {
+    position: absolute;
+    font-size: 28px;
+    opacity: 0.5;
+    animation: bob 7s ease-in-out infinite;
+  }
+  .float-emoji.e1 {
+    top: 8%;
+    left: 6%;
+    animation-delay: 0s;
+  }
+  .float-emoji.e2 {
+    top: 18%;
+    right: 8%;
+    animation-delay: 1.4s;
+  }
+  .float-emoji.e3 {
+    bottom: 12%;
+    left: 10%;
+    animation-delay: 2.6s;
+  }
+  .float-emoji.e4 {
+    bottom: 20%;
+    right: 12%;
+    animation-delay: 3.8s;
+  }
+  @keyframes bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0);
+    }
+    50% {
+      transform: translateY(-14px) rotate(6deg);
+    }
+  }
+
+  .wave-divider {
+    display: block;
+    width: 100%;
+    height: 70px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: linear-gradient(
+      135deg,
+      rgba(14, 165, 233, 0.25),
+      rgba(125, 211, 252, 0.15)
+    );
+    border: 1px solid rgba(125, 211, 252, 0.35);
+    color: var(--foam);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff 0%, #7dd3fc 50%, #fde9c9 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 18px 0 10px;
+  }
+  .hero p {
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .ocean-card {
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(255, 255, 255, 0.02)
+    );
+    border: 1px solid rgba(125, 211, 252, 0.18);
+    border-radius: 24px;
+    padding: 36px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+      0 30px 70px rgba(3, 19, 42, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .form-floating-ocean {
+    position: relative;
+    margin-bottom: 18px;
+  }
+  .form-floating-ocean label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--foam);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+  }
+  .form-floating-ocean label svg,
+  .form-floating-ocean label i {
+    color: var(--tide);
+  }
+
+  .form-control-ocean {
+    width: 100%;
+    background: rgba(3, 19, 42, 0.55);
+    border: 1px solid rgba(125, 211, 252, 0.25);
+    color: #fff;
+    border-radius: 14px;
+    padding: 13px 44px 13px 16px;
+    transition: all 0.25s ease;
+  }
+  .form-control-ocean::placeholder {
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .form-control-ocean:focus {
+    outline: none;
+    border-color: var(--tide);
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.18);
+    background: rgba(3, 19, 42, 0.75);
+  }
+
+  .field-toggle {
+    position: absolute;
+    right: 10px;
+    top: 38px;
+    background: transparent;
+    border: 0;
+    color: var(--foam);
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .field-toggle:hover {
+    background: rgba(125, 211, 252, 0.12);
+  }
+
+  /* Avatar uploader */
+  .avatar-uploader {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(3, 19, 42, 0.45);
+    border: 1px dashed rgba(125, 211, 252, 0.35);
+    margin-bottom: 22px;
+  }
+  .avatar-preview {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--tide), var(--deep));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 30px;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(14, 165, 233, 0.35);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .avatar-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .avatar-hint {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.88rem;
+  }
+  .avatar-hint b {
+    color: var(--foam);
+  }
+  .avatar-input {
+    display: none;
+  }
+  .avatar-pick-btn {
+    background: linear-gradient(135deg, var(--tide), var(--ocean));
+    border: 0;
+    color: #fff;
+    padding: 9px 16px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* Strength meter */
+  .strength-meter {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .strength-meter span {
+    flex: 1;
+    height: 6px;
+    border-radius: 6px;
+    background: rgba(125, 211, 252, 0.15);
+    transition: background 0.25s ease;
+  }
+  .strength-meter.s1 span:nth-child(1) {
+    background: var(--coral);
+  }
+  .strength-meter.s2 span:nth-child(-n + 2) {
+    background: var(--gold);
+  }
+  .strength-meter.s3 span:nth-child(-n + 3) {
+    background: var(--foam);
+  }
+  .strength-meter.s4 span {
+    background: var(--sidebar-accent);
+  }
+  .strength-label {
+    font-size: 0.82rem;
+    margin-top: 6px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  /* Verify notice */
+  .verify-notice {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: linear-gradient(
+      135deg,
+      rgba(14, 165, 233, 0.18),
+      rgba(125, 211, 252, 0.06)
+    );
+    border: 1px solid rgba(125, 211, 252, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+    margin: 8px 0 22px;
+  }
+  .verify-notice .ico {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(14, 165, 233, 0.25);
+    color: var(--foam);
+    font-size: 18px;
+  }
+  .verify-notice b {
+    color: var(--foam);
+  }
+
+  .btn-ocean {
+    background: linear-gradient(
+      135deg,
+      var(--tide) 0%,
+      var(--ocean) 60%,
+      var(--deep) 100%
+    );
+    border: 0;
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    border-radius: 14px;
+    box-shadow: 0 18px 40px rgba(14, 165, 233, 0.4);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+  .btn-ocean:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 50px rgba(14, 165, 233, 0.55);
+    color: #fff;
+  }
+
+  /* Perks */
+  .perks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 28px;
+  }
+  .perk-chip {
+    padding: 16px;
+    border-radius: 16px;
+    text-align: center;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.06),
+      rgba(125, 211, 252, 0.04)
+    );
+    border: 1px solid rgba(125, 211, 252, 0.18);
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .perk-chip .emoji {
+    font-size: 26px;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .perk-chip b {
+    color: var(--foam);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .perk-chip small {
+    color: rgba(255, 255, 255, 0.65);
+  }
+
+  .text-accent {
+    color: var(--foam) !important;
+  }
+  .login-link a {
+    color: var(--foam);
+  }
+  .login-link a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 768px) {
+    .ocean-card {
+      padding: 24px;
+    }
+    .perks {
+      grid-template-columns: 1fr;
+    }
+    .avatar-uploader {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
+
+<div class="ocean-wrap">
+  <span class="float-emoji e1">🐚</span>
+  <span class="float-emoji e2">🐠</span>
+  <span class="float-emoji e3">🌊</span>
+  <span class="float-emoji e4">⚓</span>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        <div class="hero text-center mb-4">
+          <span class="hero-badge">🌊 Coastal Kitchen</span>
+          <h1>Dive Into the Crew</h1>
+          <p>
+            Reserve tables, ride the tide of seasonal menus, and unlock perks
+            made for ocean lovers.
+          </p>
         </div>
-        {% endfor %} {% endif %} {% endwith %}
 
-        <form method="POST">
-          <div class="mb-3">
-            <label class="form-label fw-bold">Full Name</label>
-            <input
-              type="text"
-              name="full_name"
-              class="form-control form-control-lg"
-              required
-            />
-          </div>
+        <svg
+          class="wave-divider"
+          viewBox="0 0 1440 80"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"
+            fill="rgba(125,211,252,0.18)"
+          />
+        </svg>
 
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Email Address</label>
+        <div class="ocean-card">
+          {% with messages = get_flashed_messages(with_categories=true) %} {% if
+          messages %} {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+          {% endfor %} {% endif %} {% endwith %}
+
+          <form id="registerForm" method="POST" enctype="multipart/form-data">
+            <!-- Optional avatar -->
+            <div class="avatar-uploader">
+              <div class="avatar-preview" id="avatarPreview">🐚</div>
+              <div class="flex-grow-1">
+                <div class="avatar-hint mb-2">
+                  <b>Profile photo</b> —
+                  <span style="opacity: 0.8"
+                    >optional, but it makes you stand out 🐠</span
+                  >
+                </div>
+                <label for="profilePhoto" class="avatar-pick-btn"
+                  >Choose photo</label
+                >
+                <input
+                  type="file"
+                  id="profilePhoto"
+                  name="profile_photo"
+                  accept="image/*"
+                  class="avatar-input"
+                />
+              </div>
+            </div>
+
+            <div class="form-floating-ocean">
+              <label for="name">👤 Full Name</label>
               <input
-                type="email"
-                name="email"
-                class="form-control form-control-lg"
+                type="text"
+                class="form-control-ocean"
+                id="name"
+                name="name"
+                placeholder="e.g. Marina Reyes"
                 required
               />
             </div>
-            <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Phone Number</label>
+
+            <div class="form-floating-ocean">
+              <label for="email">📧 Email Address</label>
+              <input
+                type="email"
+                class="form-control-ocean"
+                id="email"
+                name="email"
+                placeholder="you@ocean.com"
+                required
+              />
+            </div>
+
+            <div class="verify-notice">
+              <div class="ico">✉️</div>
+              <div>
+                <b>Email verification required.</b><br />
+                <small
+                  >We'll send a confirmation link to set sail with your
+                  account.</small
+                >
+              </div>
+            </div>
+
+            <div class="form-floating-ocean">
+              <label for="phone">📱 Phone Number</label>
               <input
                 type="tel"
+                class="form-control-ocean"
+                id="phone"
                 name="phone"
-                class="form-control form-control-lg"
+                placeholder="+1 555 000 0000"
+                required
               />
+            </div>
+
+            <div class="form-floating-ocean">
+              <label for="password">🔒 Password</label>
+              <input
+                type="password"
+                class="form-control-ocean"
+                id="password"
+                name="password"
+                placeholder="Create a strong password"
+                required
+              />
+              <button type="button" class="field-toggle" data-target="password">
+                👁
+              </button>
+              <div class="strength-meter" id="strengthMeter">
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <div class="strength-label" id="strengthLabel">Strength: —</div>
+            </div>
+
+            <div class="form-floating-ocean">
+              <label for="confirmPassword">🔐 Confirm Password</label>
+              <input
+                type="password"
+                class="form-control-ocean"
+                id="confirmPassword"
+                name="confirm_password"
+                placeholder="Repeat your password"
+                required
+              />
+              <button
+                type="button"
+                class="field-toggle"
+                data-target="confirmPassword"
+              >
+                👁
+              </button>
+            </div>
+
+            <button type="submit" class="btn btn-ocean btn-lg w-100 py-3">
+              Create My Account
+            </button>
+          </form>
+
+          <div class="perks">
+            <div class="perk-chip">
+              <span class="emoji">🦞</span><b>Fresh Catch</b
+              ><small>Daily seafood drops</small>
+            </div>
+            <div class="perk-chip">
+              <span class="emoji">🌅</span><b>Sunset Tables</b
+              ><small>Priority booking</small>
+            </div>
+            <div class="perk-chip">
+              <span class="emoji">🎁</span><b>Crew Perks</b
+              ><small>Members-only menu</small>
             </div>
           </div>
 
-          <div class="mb-4">
-            <label class="form-label fw-bold">Password</label>
-            <input
-              type="password"
-              name="password"
-              class="form-control form-control-lg"
-              required
-            />
+          <div class="text-center mt-4 login-link">
+            <p class="mb-0" style="color: rgba(255, 255, 255, 0.78)">
+              Already part of the crew?
+              <a
+                href="{{ url_for('customer.login') }}"
+                class="text-accent fw-bold"
+                >Login Here</a
+              >
+            </p>
           </div>
-
-          <button type="submit" class="btn btn-success btn-lg w-100 py-3">
-            Create My Account
-          </button>
-        </form>
-
-        <div class="text-center mt-4">
-          <p>
-            Already have an account?
-            <a
-              href="{{ url_for('customer.login') }}"
-              class="text-accent fw-bold"
-              >Login Here</a
-            >
-          </p>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Avatar preview
+  const photoInput = document.getElementById("profilePhoto");
+  const preview = document.getElementById("avatarPreview");
+  photoInput?.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      preview.innerHTML = `<img src="${ev.target.result}" alt="avatar">`;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // Show/hide password
+  document.querySelectorAll(".field-toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const input = document.getElementById(btn.dataset.target);
+      input.type = input.type === "password" ? "text" : "password";
+    });
+  });
+
+  // Password strength
+  const pw = document.getElementById("password");
+  const meter = document.getElementById("strengthMeter");
+  const label = document.getElementById("strengthLabel");
+  const labels = ["Too weak", "Weak", "Good", "Strong", "Excellent"];
+  pw?.addEventListener("input", () => {
+    const v = pw.value;
+    let s = 0;
+    if (v.length >= 8) s++;
+    if (/[A-Z]/.test(v)) s++;
+    if (/[0-9]/.test(v)) s++;
+    if (/[^A-Za-z0-9]/.test(v)) s++;
+    meter.className = "strength-meter s" + s;
+    label.textContent = "Strength: " + (v ? labels[s] : "—");
+  });
+
+  // Confirm match
+  document.getElementById("registerForm")?.addEventListener("submit", (e) => {
+    const p = document.getElementById("password").value;
+    const c = document.getElementById("confirmPassword").value;
+    if (p !== c) {
+      e.preventDefault();
+      alert("Passwords do not match 🌊");
+    }
+  });
+</script>
 {% endblock %}
