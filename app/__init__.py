@@ -4,7 +4,6 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_socketio import SocketIO
 
-# Create extensions
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
@@ -14,32 +13,29 @@ login_manager.login_view = "auth.login"
 
 
 def create_app():
-    """Application Factory"""
-    flask_app = Flask(__name__)  # Changed variable name to avoid conflict
-    flask_app.config.from_object("config.Config")
+    app = Flask(__name__)
+    app.config.from_object("config.Config")
 
-    # Initialize extensions
-    db.init_app(flask_app)
-    migrate.init_app(flask_app, db)
-    login_manager.init_app(flask_app)
-    socketio.init_app(flask_app)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    login_manager.init_app(app)
+    socketio.init_app(app)
 
     # Register Models
-    with flask_app.app_context():
+    with app.app_context():
         import app.models.user
         import app.models.customer
-        import app.models.product
 
-    # Register Blueprints
+    # Register Blueprints - Only once
     from app.routes.auth_routes import auth
     from app.routes.main_routes import main
     from app.routes.customer_routes import customer
 
-    flask_app.register_blueprint(auth)
-    flask_app.register_blueprint(main)
-    flask_app.register_blueprint(customer)
+    app.register_blueprint(auth)
+    app.register_blueprint(main)
+    app.register_blueprint(customer)
 
-    return flask_app
+    return app
 
 
 @login_manager.user_loader
