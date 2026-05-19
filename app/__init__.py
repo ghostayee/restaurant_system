@@ -2,24 +2,28 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_socketio import SocketIO
 
 db = SQLAlchemy()
 migrate = Migrate()
 login_manager = LoginManager()
+socketio = SocketIO()
 
 login_manager.login_view = "auth.login"
 
 
 def create_app():
-    app = Flask(__name__)
-    app.config.from_object("config.Config")
+    """Create Flask App"""
+    flask_app = Flask(__name__)  # ← Changed name
+    flask_app.config.from_object("config.Config")
 
-    db.init_app(app)
-    migrate.init_app(app, db)
-    login_manager.init_app(app)
+    db.init_app(flask_app)
+    migrate.init_app(flask_app, db)
+    login_manager.init_app(flask_app)
+    socketio.init_app(flask_app)
 
     # Register Models
-    with app.app_context():
+    with flask_app.app_context():
         import app.models.user
         import app.models.customer
 
@@ -28,11 +32,11 @@ def create_app():
     from app.routes.main_routes import main
     from app.routes.customer_routes import customer
 
-    app.register_blueprint(auth)
-    app.register_blueprint(main)
-    app.register_blueprint(customer)
+    flask_app.register_blueprint(auth)
+    flask_app.register_blueprint(main)
+    flask_app.register_blueprint(customer)
 
-    return app
+    return flask_app
 
 
 @login_manager.user_loader
