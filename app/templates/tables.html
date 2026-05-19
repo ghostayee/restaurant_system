@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %} {% block title %}Tables Management -
+RestroPro{% endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="display-5">📋 Table Management</h1>
+    <p class="lead">Manage restaurant tables and generate QR codes</p>
+  </div>
+</div>
+
+<div class="row">
+  {% for table in tables %}
+  <div class="col-md-4 col-lg-3 mb-4">
+    <div
+      class="card h-100 {{ 'border-success' if table.status == 'available' else 'border-warning' }}"
+    >
+      <div class="card-header text-center fw-bold">
+        Table {{ table.table_number }}
+      </div>
+      <div class="card-body text-center">
+        <h2 class="display-6">{{ table.capacity }} Seats</h2>
+        <span
+          class="badge bg-{{ 'success' if table.status == 'available' else 'warning' }} fs-6"
+        >
+          {{ table.status|title }}
+        </span>
+      </div>
+      <div class="card-footer">
+        <a href="#" class="btn btn-sm btn-outline-primary w-100"
+          >Generate QR Code</a
+        >
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

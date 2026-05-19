@@ -1,0 +1,48 @@
+{% extends "layouts/base.html" %} {% block title %}Waiter Dashboard -
+RestroPro{% endblock %} {% block content %}
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="display-5 fw-bold">Waiter Dashboard</h1>
+    <p class="lead">Welcome, {{ user.full_name }} | Managing Tables & Orders</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Active Tables -->
+  <div class="col-md-4">
+    <div class="card text-center p-4 h-100">
+      <h2 class="text-warning">8</h2>
+      <p class="text-muted">Active Tables</p>
+      <a href="#" class="btn btn-outline-light mt-3">View All Tables</a>
+    </div>
+  </div>
+
+  <!-- Pending Orders -->
+  <div class="col-md-4">
+    <div class="card text-center p-4 h-100">
+      <h2 class="text-info">5</h2>
+      <p class="text-muted">Pending Orders</p>
+      <a href="#" class="btn btn-outline-light mt-3">View Orders</a>
+    </div>
+  </div>
+
+  <!-- Today's Sales -->
+  <div class="col-md-4">
+    <div class="card text-center p-4 h-100">
+      <h2 class="text-success">Ksh 12,450</h2>
+      <p class="text-muted">Today's Sales</p>
+    </div>
+  </div>
+</div>
+
+<div class="mt-5">
+  <h4 class="mb-3">Quick Actions</h4>
+  <div class="d-flex flex-wrap gap-3">
+    <a href="#" class="btn btn-primary btn-lg">New Order</a>
+    <a href="#" class="btn btn-outline-light btn-lg">Manage Tables</a>
+    <a href="#" class="btn btn-outline-light btn-lg">View Kitchen Status</a>
+  </div>
+</div>
+
+{% endblock %}

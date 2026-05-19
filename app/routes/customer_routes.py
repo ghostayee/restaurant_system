@@ -2,17 +2,18 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models.customer import Customer
+from app.models.product import Category
 
 customer = Blueprint("customer", __name__, url_prefix="/customer")
 
 
-# ====================== CUSTOMER HOMEPAGE ======================
+#CUSTOMER HOMEPAGE
 @customer.route("/")
 def index():
     return render_template("customer/index.html")
 
 
-# ====================== CUSTOMER REGISTER ======================
+#CUSTOMER REGISTER
 @customer.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -37,7 +38,7 @@ def register():
     return render_template("customer/register.html")
 
 
-# ====================== CUSTOMER LOGIN ======================
+#CUSTOMER LOGIN
 @customer.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -55,7 +56,13 @@ def login():
 
     return render_template("customer/login.html")
 
+#MENU PAGE
+@customer.route('/menu')
+def menu():
+    categories = Category.query.all()
+    return render_template('customer/menu.html', categories=categories)
 
+#LOGOUT
 @customer.route("/logout")
 @login_required
 def logout():

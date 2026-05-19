@@ -1,0 +1,64 @@
+{% extends "layouts/base.html" %} {% block title %}Menu - RestroPro{% endblock
+%} {% block content %}
+
+<div class="menu-hero text-center py-5">
+  <h1 class="display-4 fw-bold">Our Menu</h1>
+  <p class="lead">Fresh • Delicious • Made with Love</p>
+</div>
+
+<div class="container mt-4">
+  <!-- Categories -->
+  <div class="mb-5">
+    {% for category in categories %}
+    <h3 class="mt-5 mb-3 text-accent">{{ category.name }}</h3>
+    <div class="row">
+      {% for product in category.products %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100 menu-card">
+          {% if product.image_url %}
+          <img
+            src="{{ product.image_url }}"
+            class="card-img-top"
+            alt="{{ product.name }}"
+          />
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text text-muted">{{ product.description }}</p>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="fs-4 fw-bold text-accent"
+                >Ksh {{ product.price }}</span
+              >
+              <button class="btn btn-outline-light btn-sm">Add to Order</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .menu-hero {
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
+      url('{{ url_for("static", filename="images/kilifi-bridge.jpg") }}')
+        center/cover;
+    color: white;
+  }
+  .menu-card {
+    background: rgba(30, 41, 59, 0.95);
+    border: none;
+    transition: transform 0.3s;
+  }
+  .menu-card:hover {
+    transform: translateY(-8px);
+  }
+  .text-accent {
+    color: #ffd400;
+  }
+</style>
+
+{% endblock %}
