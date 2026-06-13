@@ -2,32 +2,35 @@
 RestroPro{% endblock %} {% block content %}
 <div class="row mb-4">
   <div class="col-12">
-    <h1 class="display-5">📋 Table Management</h1>
-    <p class="lead">Manage restaurant tables and generate QR codes</p>
+    <h1 class="display-5 fw-bold">📋 Restaurant Tables</h1>
+    <p class="lead">
+      Manage tables and generate QR codes for customer ordering
+    </p>
   </div>
 </div>
 
-<div class="row">
+<div class="row g-4">
   {% for table in tables %}
-  <div class="col-md-4 col-lg-3 mb-4">
+  <div class="col-md-6 col-lg-4">
     <div
-      class="card h-100 {{ 'border-success' if table.status == 'available' else 'border-warning' }}"
+      class="card h-100 shadow-sm {{ 'border-success' if table.status == 'available' else 'border-warning' }}"
     >
-      <div class="card-header text-center fw-bold">
+      <div class="card-header text-center fw-bold fs-5">
         Table {{ table.table_number }}
       </div>
       <div class="card-body text-center">
-        <h2 class="display-6">{{ table.capacity }} Seats</h2>
+        <h2 class="display-6 mb-1">{{ table.capacity }} Seats</h2>
         <span
-          class="badge bg-{{ 'success' if table.status == 'available' else 'warning' }} fs-6"
+          class="badge fs-6 px-3 py-2 bg-{{ 'success' if table.status == 'available' else 'warning' if table.status == 'occupied' else 'info' }}"
         >
           {{ table.status|title }}
         </span>
       </div>
       <div class="card-footer">
-        <a href="#" class="btn btn-sm btn-outline-primary w-100"
+        <a href="#" class="btn btn-outline-primary w-100 mb-2"
           >Generate QR Code</a
         >
+        <a href="#" class="btn btn-outline-success w-100">View Orders</a>
       </div>
     </div>
   </div>

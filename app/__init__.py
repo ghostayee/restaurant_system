@@ -31,6 +31,7 @@ def create_app():
         import app.models.user
         import app.models.customer
         import app.models.product
+        import app.models.table
 
     # Register Blueprints
     from app.routes.auth_routes import auth
