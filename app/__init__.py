@@ -19,7 +19,7 @@ def create_app():
     flask_app = Flask(__name__)
     flask_app.config.from_object("config.Config")
 
-    # Initialize extensions
+    # extensions
     db.init_app(flask_app)
     migrate.init_app(flask_app, db)
     login_manager.init_app(flask_app)
@@ -32,6 +32,7 @@ def create_app():
         import app.models.customer
         import app.models.product
         import app.models.table
+        import app.models.order
 
     # Register Blueprints
     from app.routes.auth_routes import auth

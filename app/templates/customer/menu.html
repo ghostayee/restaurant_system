@@ -1,64 +1,62 @@
-{% extends "layouts/base.html" %} {% block title %}Menu - RestroPro{% endblock
-%} {% block content %}
+{% extends "layouts/base.html" %}
+{% block title %}Menu - RestroPro{% endblock %}
 
-<div class="menu-hero text-center py-5">
-  <h1 class="display-4 fw-bold">Our Menu</h1>
-  <p class="lead">Fresh • Delicious • Made with Love</p>
-</div>
-
-<div class="container mt-4">
-  <!-- Categories -->
-  <div class="mb-5">
-    {% for category in categories %}
-    <h3 class="mt-5 mb-3 text-accent">{{ category.name }}</h3>
-    <div class="row">
-      {% for product in category.products %}
-      <div class="col-md-6 col-lg-4 mb-4">
-        <div class="card h-100 menu-card">
-          {% if product.image_url %}
-          <img
-            src="{{ product.image_url }}"
-            class="card-img-top"
-            alt="{{ product.name }}"
-          />
-          {% endif %}
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text text-muted">{{ product.description }}</p>
-            <div class="d-flex justify-content-between align-items-center">
-              <span class="fs-4 fw-bold text-accent"
-                >Ksh {{ product.price }}</span
-              >
-              <button class="btn btn-outline-light btn-sm">Add to Order</button>
-            </div>
+{% block content %}
+<div class="hero-panel p-4 p-md-5 mb-4">
+  <div class="row align-items-center gy-4">
+    <div class="col-lg-8">
+      <p class="text-accent fw-semibold mb-2">Guest ordering</p>
+      <h1 class="display-6 fw-bold mb-2">Fresh dishes, fast service</h1>
+      <p class="text-white-50 mb-0">Choose from the menu and send your order directly to the kitchen in a few taps.</p>
+    </div>
+    <div class="col-lg-4">
+      <div class="soft-card p-3 rounded-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="fw-bold mb-1">Current order</h5>
+            <p class="text-muted mb-0">{{ cart_count }} item{% if cart_count != 1 %}s{% endif %}</p>
           </div>
+          <a href="{{ url_for('customer.order') }}" class="btn btn-primary btn-sm">View order</a>
         </div>
       </div>
-      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<div class="d-flex flex-wrap gap-2 mb-4">
+  {% for category in categories %}
+  <span class="category-pill">{{ category.name }}</span>
+  {% endfor %}
+</div>
+
+{% for category in categories %}
+<div class="mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="fw-bold mb-0">{{ category.name }}</h3>
+    <span class="text-muted">{{ category.products|length }} items</span>
+  </div>
+
+  <div class="row g-4">
+    {% for product in category.products %}
+    <div class="col-md-6 col-lg-4">
+      <div class="soft-card p-3 h-100 rounded-4">
+        {% if product.image_url %}
+        <img src="{{ product.image_url }}" class="img-fluid rounded-3 mb-3" alt="{{ product.name }}" />
+        {% endif %}
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <h5 class="fw-bold mb-1">{{ product.name }}</h5>
+            <p class="text-muted small mb-0">{{ product.description or 'Freshly prepared to order.' }}</p>
+          </div>
+          <span class="price-badge">Ksh {{ '%.0f'|format(product.price) }}</span>
+        </div>
+        <form method="post" action="{{ url_for('customer.add_to_cart', product_id=product.id) }}">
+          <button class="btn btn-primary w-100">Add to order</button>
+        </form>
+      </div>
     </div>
     {% endfor %}
   </div>
 </div>
-
-<style>
-  .menu-hero {
-    background:
-      linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),
-      url('{{ url_for("static", filename="images/kilifi-bridge.jpg") }}')
-        center/cover;
-    color: white;
-  }
-  .menu-card {
-    background: rgba(30, 41, 59, 0.95);
-    border: none;
-    transition: transform 0.3s;
-  }
-  .menu-card:hover {
-    transform: translateY(-8px);
-  }
-  .text-accent {
-    color: #ffd400;
-  }
-</style>
-
+{% endfor %}
 {% endblock %}

@@ -1,36 +1,48 @@
-{% extends "layouts/base.html" %} {% block title %}Tables Management -
-RestroPro{% endblock %} {% block content %}
-<div class="row mb-4">
-  <div class="col-12">
-    <h1 class="display-5 fw-bold">📋 Restaurant Tables</h1>
-    <p class="lead">
-      Manage tables and generate QR codes for customer ordering
-    </p>
+{% extends "layouts/base.html" %}
+{% block title %}Tables Management - RestroPro{% endblock %}
+
+{% block content %}
+<div class="hero-panel p-4 p-md-5 mb-4">
+  <div class="row align-items-center">
+    <div class="col-lg-8">
+      <p class="text-accent fw-semibold mb-2">Floor management</p>
+      <h1 class="display-6 fw-bold mb-2">Restaurant tables</h1>
+      <p class="text-white-50 mb-0">Keep the dining floor organized with live table status updates and fast service flow.</p>
+    </div>
+    <div class="col-lg-4 mt-3 mt-lg-0">
+      <div class="soft-card p-3 rounded-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="fw-bold mb-1">Today’s floor</h5>
+            <p class="text-muted mb-0">{{ tables|length }} tables on the floor</p>
+          </div>
+          <span class="price-badge">Live</span>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
 <div class="row g-4">
   {% for table in tables %}
   <div class="col-md-6 col-lg-4">
-    <div
-      class="card h-100 shadow-sm {{ 'border-success' if table.status == 'available' else 'border-warning' }}"
-    >
-      <div class="card-header text-center fw-bold fs-5">
-        Table {{ table.table_number }}
+    <div class="soft-card p-4 h-100 rounded-4">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h4 class="fw-bold mb-1">Table {{ table.table_number }}</h4>
+          <p class="text-muted mb-0">{{ table.capacity }} seats</p>
+        </div>
+        <span class="status-chip status-{{ table.status or 'available' }}">{{ table.status or 'available'|title }}</span>
       </div>
-      <div class="card-body text-center">
-        <h2 class="display-6 mb-1">{{ table.capacity }} Seats</h2>
-        <span
-          class="badge fs-6 px-3 py-2 bg-{{ 'success' if table.status == 'available' else 'warning' if table.status == 'occupied' else 'info' }}"
-        >
-          {{ table.status|title }}
-        </span>
+
+      <div class="mt-4">
+        <p class="mb-2"><i class="bi bi-people me-2"></i>Ready for dining</p>
+        <p class="mb-0"><i class="bi bi-upc-scan me-2"></i>QR ordering ready</p>
       </div>
-      <div class="card-footer">
-        <a href="#" class="btn btn-outline-primary w-100 mb-2"
-          >Generate QR Code</a
-        >
-        <a href="#" class="btn btn-outline-success w-100">View Orders</a>
+
+      <div class="d-flex gap-2 mt-4">
+        <a href="{{ url_for('main.toggle_table_status', table_id=table.id) }}" class="btn btn-primary btn-sm">Toggle status</a>
+        <a href="{{ url_for('customer.menu') }}" class="btn btn-outline-light btn-sm">Open menu</a>
       </div>
     </div>
   </div>

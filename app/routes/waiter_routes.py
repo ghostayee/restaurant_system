@@ -15,7 +15,7 @@ def dashboard():
     return render_template("waiter/dashboard.html", user=current_user)
 
 
-@main.route('/tables')
+@waiter.route('/tables')
 @login_required
 def tables():
     tables = RestaurantTable.query.all()
