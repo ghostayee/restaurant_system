@@ -56,6 +56,7 @@ class MenuManagementTests(unittest.TestCase):
                 "description": "Cold mango delight",
                 "price": "5.50",
                 "category_id": str(category.id),
+                "image_url": "https://example.com/mango.jpg",
                 "available": "on",
             },
             follow_redirects=True,
@@ -67,6 +68,7 @@ class MenuManagementTests(unittest.TestCase):
             product = Product.query.filter_by(name="Mango Smoothie").first()
         self.assertIsNotNone(product)
         self.assertTrue(product.available)
+        self.assertEqual(product.image_url, "https://example.com/mango.jpg")
 
         response = self.client.post(
             "/menu-management",

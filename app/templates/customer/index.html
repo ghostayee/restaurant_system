@@ -1,14 +1,20 @@
 {% extends "layouts/base.html" %} {% block title %}RestroPro - Welcome{%
 endblock %} {% block content %}
 <div
-  class="hero text-center py-5"
+  class="hero text-center py-5 px-4"
   style="
     background:
-      linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
-      url(&quot;https://source.unsplash.com/random/1600x900/?restaurant&quot;);
+      linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.78)),
+      url('{{ url_for("static", filename="images/welcome.jpg") }}');
     background-size: cover;
+    background-position: center;
     color: white;
-    border-radius: 10px;
+    border-radius: 18px;
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
   "
 >
   <h1 class="display-3 fw-bold">Welcome to Our Restaurant</h1>

@@ -74,14 +74,15 @@ endblock %} {% block content %}
   .login-container {
     min-height: 100vh;
     display: flex;
-    background: #000
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.78), rgba(12, 12, 12, 0.9)),
       url('{{ url_for("static", filename="images/food.jpg") }}')
       center/cover no-repeat fixed;
   }
 
   .login-image {
     flex: 1;
-    background: url('{{ url_for("static", filename="images/platter.jpg") }}')
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.7)),
+      url('{{ url_for("static", filename="images/platter.jpg") }}')
       center/cover no-repeat;
     position: relative;
     display: none;

@@ -7,6 +7,8 @@ from app.models.product import Category, Product
 from app.models.table import RestaurantTable
 from app.models.user import User
 from app.models.notification import Notification
+from app.models.offer import Offer
+from app import emit_customer_notification
 
 customer = Blueprint("customer", __name__, url_prefix="/customer")
 
@@ -92,11 +94,13 @@ def menu(table_id=None):
         session["customer_table_id"] = int(request.args.get("table_id"))
 
     categories = Category.query.all()
+    offers = Offer.query.filter_by(active=True).order_by(Offer.created_at.desc()).all()
     cart = _get_cart()
     selected_table = _get_selected_table()
     return render_template(
         'customer/menu.html',
         categories=categories,
+        offers=offers,
         cart_count=_cart_count(cart),
         selected_table=selected_table,
     )
@@ -236,6 +240,25 @@ def order():
             )
 
         db.session.commit()
+
+        if current_user.is_authenticated or customer_record:
+            customer_user_id = current_user.id if current_user.is_authenticated else customer_record.id
+            db.session.add(Notification(user_id=customer_user_id, message=f"Your order #{order_record.id} has been received and is now pending.", read=False))
+
+        if waiter:
+            db.session.add(Notification(user_id=waiter.id, message=f"New order #{order_record.id} needs attention from the waiter.", read=False))
+
+        if waiter and waiter.role != 'chef':
+            chef_user = User.query.filter_by(role='chef').first()
+            if chef_user:
+                db.session.add(Notification(user_id=chef_user.id, message=f"New order #{order_record.id} is waiting for preparation.", read=False))
+
+        db.session.commit()
+
+        if current_user.is_authenticated or customer_record:
+            customer_user_id = current_user.id if current_user.is_authenticated else customer_record.id
+            emit_customer_notification(customer_user_id, order_record.id, f"Your order #{order_record.id} has been received and is pending.")
+
         session.pop('customer_cart', None)
         if customer_record:
             flash("Order placed successfully. Your account is ready so you can track this order later.", "success")

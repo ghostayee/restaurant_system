@@ -72,13 +72,44 @@ def _seed_demo_data(flask_app):
             customer.set_password("customer123")
             db.session.add(customer)
 
-        if not Category.query.first():
-            category = Category(name="Featured", description="Demo dishes")
-            db.session.add(category)
+        featured_category = Category.query.filter_by(name="Featured").first()
+        if not featured_category:
+            featured_category = Category(name="Featured", description="Signature dishes")
+            db.session.add(featured_category)
             db.session.flush()
 
-            product = Product(name="Burger Combo", description="Classic burger", price=12.5, category_id=category.id, available=True)
-            db.session.add(product)
+        if not Product.query.filter_by(name="Burger Combo").first():
+            db.session.add(Product(name="Burger Combo", description="Classic burger with fries", price=12.5, category_id=featured_category.id, available=True))
+
+        if not Product.query.filter_by(name="Chicken Wrap").first():
+            db.session.add(Product(name="Chicken Wrap", description="Grilled chicken wrap", price=9.5, category_id=featured_category.id, available=True))
+
+        if not Product.query.filter_by(name="Veggie Pizza").first():
+            db.session.add(Product(name="Veggie Pizza", description="Fresh mixed vegetable pizza", price=14.0, category_id=featured_category.id, available=True))
+
+        burgers_category = Category.query.filter_by(name="Burgers").first()
+        if not burgers_category:
+            burgers_category = Category(name="Burgers", description="Fresh grilled burgers")
+            db.session.add(burgers_category)
+            db.session.flush()
+
+        if not Product.query.filter_by(name="Beef Burger").first():
+            db.session.add(Product(name="Beef Burger", description="Juicy beef burger", price=13.5, category_id=burgers_category.id, available=True))
+
+        if not Product.query.filter_by(name="Chicken Burger").first():
+            db.session.add(Product(name="Chicken Burger", description="Crispy chicken burger", price=11.5, category_id=burgers_category.id, available=True))
+
+        drinks_category = Category.query.filter_by(name="Drinks").first()
+        if not drinks_category:
+            drinks_category = Category(name="Drinks", description="Cool drinks and refreshments")
+            db.session.add(drinks_category)
+            db.session.flush()
+
+        if not Product.query.filter_by(name="Mango Juice").first():
+            db.session.add(Product(name="Mango Juice", description="Fresh mango juice", price=4.5, category_id=drinks_category.id, available=True))
+
+        if not Product.query.filter_by(name="Coke").first():
+            db.session.add(Product(name="Coke", description="Cold soft drink", price=2.5, category_id=drinks_category.id, available=True))
 
         if not RestaurantTable.query.first():
             table = RestaurantTable(table_number="T1", capacity=4, status="available")

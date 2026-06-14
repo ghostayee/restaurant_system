@@ -50,6 +50,10 @@
             <label class="form-label">Description</label>
             <textarea class="form-control" name="description" rows="2"></textarea>
           </div>
+          <div class="col-12">
+            <label class="form-label">Image URL</label>
+            <input type="text" class="form-control" name="image_url" placeholder="https://example.com/image.jpg">
+          </div>
           <div class="col-md-6">
             <label class="form-label">Category</label>
             <select class="form-select" name="category_id" required>
@@ -134,6 +138,10 @@
                   <div class="col-12">
                     <label class="form-label">Description</label>
                     <textarea class="form-control" name="description" rows="2">{{ product.description or '' }}</textarea>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Image URL</label>
+                    <input type="text" class="form-control" name="image_url" value="{{ product.image_url or '' }}">
                   </div>
                 </div>
                 <button class="btn btn-primary mt-3" type="submit">Save changes</button>

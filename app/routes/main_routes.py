@@ -6,6 +6,9 @@ from app.models.order import Order
 from app.models.table import RestaurantTable
 from app.models.product import Category, Product
 from app.models.notification import Notification
+from app.models.offer import Offer
+from app.models.customer import Customer
+from app.models.user import User
 
 main = Blueprint("main", __name__)
 
@@ -151,9 +154,10 @@ def menu_management():
             description = request.form.get('description', '').strip()
             price = float(request.form.get('price', 0) or 0)
             category_id = request.form.get('category_id', type=int)
+            image_url = request.form.get('image_url', '').strip() or None
             available = request.form.get('available') == 'on'
             if name and category_id:
-                db.session.add(Product(name=name, description=description or None, price=price, category_id=category_id, available=available))
+                db.session.add(Product(name=name, description=description or None, price=price, category_id=category_id, image_url=image_url, available=available))
                 db.session.commit()
                 flash('Product added to the menu.', 'success')
             return redirect(url_for('main.menu_management'))
@@ -174,6 +178,7 @@ def menu_management():
             description = request.form.get('description', '').strip()
             price = float(request.form.get('price', 0) or 0)
             category_id = request.form.get('category_id', type=int)
+            image_url = request.form.get('image_url', '').strip() or None
             available = request.form.get('available') == 'on'
             if product_id and name and category_id:
                 product = Product.query.get(product_id)
@@ -182,6 +187,7 @@ def menu_management():
                     product.description = description or None
                     product.price = price
                     product.category_id = category_id
+                    product.image_url = image_url
                     product.available = available
                     db.session.commit()
                     flash('Product updated.', 'success')
@@ -200,3 +206,86 @@ def menu_management():
     categories = Category.query.order_by(Category.name).all()
     products = Product.query.order_by(Product.name).all()
     return render_template('menu_management.html', categories=categories, products=products)
+
+
+@main.route('/database-view')
+@login_required
+def database_view():
+    if current_user.role != 'admin':
+        flash('Access denied.', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    users = User.query.order_by(User.created_at.desc()).all()
+    customers = Customer.query.order_by(Customer.created_at.desc()).all()
+    categories = Category.query.order_by(Category.name).all()
+    products = Product.query.order_by(Product.name).all()
+    offers = Offer.query.order_by(Offer.created_at.desc()).all()
+    return render_template(
+        'database_view.html',
+        users=users,
+        customers=customers,
+        categories=categories,
+        products=products,
+        offers=offers,
+    )
+
+
+@main.route('/offers-management', methods=['GET', 'POST'])
+@login_required
+def offers_management():
+    if request.method == 'POST':
+        action = request.form.get('action')
+
+        if action == 'create_offer':
+            title = request.form.get('title', '').strip()
+            description = request.form.get('description', '').strip()
+            discount = float(request.form.get('discount', 0) or 0)
+            image_url = request.form.get('image_url', '').strip() or None
+            active = request.form.get('active') == 'on'
+            if title:
+                db.session.add(Offer(title=title, description=description or None, discount=discount, image_url=image_url, active=active))
+                db.session.commit()
+                flash('Offer created.', 'success')
+            return redirect(url_for('main.offers_management'))
+
+        if action == 'toggle_offer':
+            offer_id = request.form.get('offer_id', type=int)
+            if offer_id:
+                offer = Offer.query.get(offer_id)
+                if offer:
+                    offer.active = not offer.active
+                    db.session.commit()
+                    flash(f"{offer.title} status updated.", 'success')
+            return redirect(url_for('main.offers_management'))
+
+        if action == 'edit_offer':
+            offer_id = request.form.get('offer_id', type=int)
+            title = request.form.get('title', '').strip()
+            description = request.form.get('description', '').strip()
+            discount = float(request.form.get('discount', 0) or 0)
+            image_url = request.form.get('image_url', '').strip() or None
+            active = request.form.get('active') == 'on'
+            if offer_id and title:
+                offer = Offer.query.get(offer_id)
+                if offer:
+                    offer.title = title
+                    offer.description = description or None
+                    offer.discount = discount
+                    offer.image_url = image_url
+                    offer.active = active
+                    db.session.commit()
+                    flash('Offer updated.', 'success')
+            return redirect(url_for('main.offers_management'))
+
+        if action == 'delete_offer':
+            offer_id = request.form.get('offer_id', type=int)
+            if offer_id:
+                offer = Offer.query.get(offer_id)
+                if offer:
+                    db.session.delete(offer)
+                    db.session.commit()
+                    flash('Offer removed.', 'success')
+            return redirect(url_for('main.offers_management'))
+
+    offers = Offer.query.order_by(Offer.created_at.desc()).all()
+    return render_template('offers_management.html', offers=offers)

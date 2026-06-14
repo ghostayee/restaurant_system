@@ -1,7 +1,5 @@
-{% extends "layouts/base.html" %}
-{% block title %}Your Order - RestroPro{% endblock %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block title %}Your Order - RestroPro{%
+endblock %} {% block content %}
 <div class="row g-4">
   <div class="col-lg-8">
     <div class="soft-card p-4 rounded-4">
@@ -10,19 +8,31 @@
           <p class="text-accent fw-semibold mb-1">Order summary</p>
           <h2 class="fw-bold mb-0">Your current order</h2>
         </div>
-        <a href="{{ url_for('customer.menu') }}" class="btn btn-outline-light btn-sm">Back to menu</a>
+        <a
+          href="{{ url_for('customer.menu') }}"
+          class="btn btn-outline-light btn-sm"
+          >Back to menu</a
+        >
       </div>
 
       {% if cart_items %}
       <div class="d-flex flex-column gap-3">
         {% for item in cart_items %}
-        <div class="rounded-3 p-3" style="background: rgba(255, 212, 0, 0.06); border: 1px solid rgba(255, 212, 0, 0.18);">
+        <div
+          class="rounded-3 p-3"
+          style="
+            background: rgba(255, 212, 0, 0.06);
+            border: 1px solid rgba(255, 212, 0, 0.18);
+          "
+        >
           <div class="d-flex justify-content-between align-items-start">
             <div>
               <h5 class="fw-bold mb-1">{{ item.name }}</h5>
               <p class="text-muted mb-0">Qty: {{ item.quantity }}</p>
             </div>
-            <span class="price-badge">Ksh {{ '%.0f'|format(item.price * item.quantity) }}</span>
+            <span class="price-badge"
+              >Ksh {{ '%.0f'|format(item.price * item.quantity) }}</span
+            >
           </div>
         </div>
         {% endfor %}
@@ -30,8 +40,12 @@
       {% else %}
       <div class="text-center py-5">
         <h5 class="fw-bold">Your cart is empty</h5>
-        <p class="text-muted">Pick a few dishes from the menu to build your order.</p>
-        <a href="{{ url_for('customer.menu') }}" class="btn btn-primary">Explore menu</a>
+        <p class="text-muted">
+          Pick a few dishes from the menu to build your order.
+        </p>
+        <a href="{{ url_for('customer.menu') }}" class="btn btn-primary"
+          >Explore menu</a
+        >
       </div>
       {% endif %}
     </div>
@@ -46,17 +60,44 @@
       </div>
       <div class="d-flex justify-content-between mb-3">
         <span class="text-muted">Total</span>
-        <span class="fw-bold text-accent">Ksh {{ '%.0f'|format(cart_total) }}</span>
+        <span class="fw-bold text-accent"
+          >Ksh {{ '%.0f'|format(cart_total) }}</span
+        >
       </div>
 
       <form method="post">
         <div class="mb-3">
           <label class="form-label">Special requests</label>
-          <textarea name="notes" class="form-control" rows="3" placeholder="No onions, extra sauce, etc."></textarea>
+          <textarea
+            name="notes"
+            class="form-control"
+            rows="3"
+            placeholder="No onions, extra sauce, etc."
+          ></textarea>
         </div>
-        <button class="btn btn-primary w-100" {% if not cart_items %}disabled{% endif %}>Place order</button>
+        <button
+          class="btn btn-primary w-100"
+          {%
+          if
+          not
+          cart_items
+          %}disabled{%
+          endif
+          %}
+        >
+          Place order
+        </button>
       </form>
     </div>
   </div>
+  </div>
 </div>
+
+<style>
+  .customer-page-shell {
+    background: linear-gradient(135deg, rgba(7, 7, 7, 0.9), rgba(20, 20, 20, 0.82)), url('{{ url_for("static", filename="images/background.jpg") }}') center/cover no-repeat;
+    border: 1px solid rgba(255, 212, 0, 0.22);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+  }
+</style>
 {% endblock %}
