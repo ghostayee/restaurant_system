@@ -7,7 +7,11 @@
     <div class="col-lg-8">
       <p class="text-accent fw-semibold mb-2">Guest ordering</p>
       <h1 class="display-6 fw-bold mb-2">Fresh dishes, fast service</h1>
+      {% if selected_table %}
+      <p class="text-white-50 mb-0">Ordering for table {{ selected_table.table_number }}. Open this link or the QR menu to browse the menu and place an order.</p>
+      {% else %}
       <p class="text-white-50 mb-0">Choose from the menu and send your order directly to the kitchen in a few taps.</p>
+      {% endif %}
     </div>
     <div class="col-lg-4">
       <div class="soft-card p-3 rounded-4">

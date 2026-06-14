@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Order Details - RestroPro{% endblock %}
+
+{% block content %}
+<div class="hero-panel p-4 p-md-5 mb-4">
+  <div class="row align-items-center">
+    <div class="col-lg-8">
+      <p class="text-accent fw-semibold mb-2">Service details</p>
+      <h1 class="display-6 fw-bold mb-2">Order #{{ order.id }}</h1>
+      <p class="text-white-50 mb-0">Review items, notes, table, and current status for this order.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="soft-card p-4 rounded-4">
+      <h4 class="fw-bold mb-3">Order summary</h4>
+      <p class="mb-2"><strong>Table:</strong> {{ order.table_id }}</p>
+      <p class="mb-2"><strong>Status:</strong> {{ order.status|title }}</p>
+      <p class="mb-2"><strong>Payment:</strong> {{ order.payment_status|title }}</p>
+      <p class="mb-0"><strong>Total:</strong> Ksh {{ '%.2f'|format(order.total_amount) }}</p>
+
+      <form method="post" action="{{ url_for('main.update_order_status', order_id=order.id) }}" class="mt-4">
+        <label class="form-label">Update status</label>
+        <select class="form-select" name="status">
+          {% for value in ['pending', 'preparing', 'ready', 'completed', 'cancelled'] %}
+          <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ value|title }}</option>
+          {% endfor %}
+        </select>
+        <button class="btn btn-primary mt-3" type="submit">Save status</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="soft-card p-4 rounded-4">
+      <h4 class="fw-bold mb-3">Items</h4>
+      {% if items %}
+        <div class="d-flex flex-column gap-3">
+          {% for item in items %}
+          <div class="rounded-3 p-3" style="background: rgba(255,212,0,0.06); border: 1px solid rgba(255,212,0,0.18);">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="fw-bold mb-1">{{ item.product.name if item.product else 'Item' }}</h6>
+                <p class="text-muted mb-1">Quantity: {{ item.quantity }}</p>
+                {% if item.notes %}
+                <p class="text-muted mb-0">Note: {{ item.notes }}</p>
+                {% endif %}
+              </div>
+              <span class="price-badge">x{{ item.quantity }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted mb-0">No items recorded.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

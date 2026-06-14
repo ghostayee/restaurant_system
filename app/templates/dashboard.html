@@ -3,45 +3,92 @@
 {% block title %}Dashboard - RestroPro{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-12">
-        <h1 class="display-5 fw-bold">Welcome back, {{ user.full_name }}! 👋</h1>
-        <p class="lead text-muted">Role: <span class="badge bg-warning fs-6">{{ user.role|title }}</span></p>
+<div class="hero-panel p-4 p-md-5 mb-4">
+  <div class="row align-items-center">
+    <div class="col-lg-8">
+      <p class="text-accent fw-semibold mb-2">Operations overview</p>
+      <h1 class="display-6 fw-bold mb-2">Welcome back, {{ user.full_name }}!</h1>
+      <p class="text-white-50 mb-0">You are managing the restaurant floor with live activity, fast service flow, and a polished front-of-house experience.</p>
     </div>
+    <div class="col-lg-4 mt-3 mt-lg-0">
+      <div class="soft-card p-3 rounded-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="fw-bold mb-1">Current role</h5>
+            <p class="text-muted mb-0">{{ user.role|title }}</p>
+          </div>
+          <span class="price-badge">Live</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-3">
+    <div class="soft-card p-4 rounded-4 text-center h-100">
+      <h2 class="text-accent fw-bold mb-1">{{ occupied_tables }}</h2>
+      <p class="text-muted mb-0">Occupied Tables</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="soft-card p-4 rounded-4 text-center h-100">
+      <h2 class="text-accent fw-bold mb-1">{{ pending_orders }}</h2>
+      <p class="text-muted mb-0">Pending Orders</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="soft-card p-4 rounded-4 text-center h-100">
+      <h2 class="text-accent fw-bold mb-1">Ksh {{ '%.2f'|format(total_sales) }}</h2>
+      <p class="text-muted mb-0">Total Sales</p>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="soft-card p-4 rounded-4 text-center h-100">
+      <h2 class="text-accent fw-bold mb-1">{{ low_stock_items }}</h2>
+      <p class="text-muted mb-0">Low Stock Items</p>
+    </div>
+  </div>
 </div>
 
 <div class="row g-4">
-    <!-- Quick Stats -->
-    <div class="col-md-3">
-        <div class="card text-center p-4">
-            <h2 class="text-warning">12</h2>
-            <p class="text-muted mb-0">Active Tables</p>
-        </div>
+  <div class="col-lg-8">
+    <div class="soft-card p-4 rounded-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Restaurant activity</h4>
+        <span class="price-badge">Updated now</span>
+      </div>
+      <div class="d-flex flex-column gap-3">
+        {% if orders %}
+          {% for order in orders[:5] %}
+          <div class="rounded-3 p-3" style="background: rgba(255,212,0,0.06); border: 1px solid rgba(255,212,0,0.18);">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h6 class="fw-bold mb-1">Order #{{ order.id }} for table {{ order.table_id }}</h6>
+                <p class="text-muted mb-0">Status: {{ order.status|title }} · Total: Ksh {{ '%.2f'|format(order.total_amount) }}</p>
+              </div>
+              <span class="status-chip status-occupied">{{ order.status|title }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p class="text-muted mb-0">No orders yet.</p>
+        {% endif %}
+      </div>
     </div>
-    <div class="col-md-3">
-        <div class="card text-center p-4">
-            <h2 class="text-success">7</h2>
-            <p class="text-muted mb-0">Pending Orders</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-center p-4">
-            <h2 class="text-info">Ksh 28,450</h2>
-            <p class="text-muted mb-0">Today's Sales</p>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-center p-4">
-            <h2 class="text-danger">3</h2>
-            <p class="text-muted mb-0">Low Stock Items</p>
-        </div>
-    </div>
-</div>
+  </div>
 
-<div class="mt-5">
-    <h4 class="mb-3">Quick Actions</h4>
-    <a href="#" class="btn btn-primary btn-lg me-3">New Order</a>
-    <a href="#" class="btn btn-outline-light btn-lg me-3">Kitchen View</a>
-    <a href="#" class="btn btn-outline-light btn-lg">Manage Menu</a>
+  <div class="col-lg-4">
+    <div class="soft-card p-4 rounded-4">
+      <h4 class="fw-bold mb-3">Quick actions</h4>
+      <div class="d-grid gap-2">
+        <a href="{{ url_for('main.tables') }}" class="btn btn-primary">Manage tables</a>
+        <a href="{{ url_for('kitchen.dashboard') }}" class="btn btn-outline-light">Kitchen view</a>
+        <a href="{{ url_for('main.inventory') }}" class="btn btn-outline-light">Manage inventory</a>
+        <a href="{{ url_for('main.menu_management') }}" class="btn btn-outline-light">Menu management</a>
+        <a href="{{ url_for('main.order_search') }}" class="btn btn-outline-light">Search orders</a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

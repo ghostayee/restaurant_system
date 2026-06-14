@@ -1,0 +1,151 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Menu Management - RestroPro{% endblock %}
+
+{% block content %}
+<div class="hero-panel p-4 p-md-5 mb-4">
+  <div class="row align-items-center">
+    <div class="col-lg-8">
+      <p class="text-accent fw-semibold mb-2">Menu control</p>
+      <h1 class="display-6 fw-bold mb-2">Manage categories and dishes</h1>
+      <p class="text-white-50 mb-0">Create new menu sections, add products, and toggle availability right from the staff dashboard.</p>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="soft-card p-4 rounded-4">
+      <h4 class="fw-bold mb-3">Create a category</h4>
+      <form method="post">
+        <input type="hidden" name="action" value="create_category">
+        <div class="mb-3">
+          <label class="form-label">Category name</label>
+          <input type="text" class="form-control" name="name" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          <textarea class="form-control" name="description" rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Save category</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="soft-card p-4 rounded-4">
+      <h4 class="fw-bold mb-3">Add a product</h4>
+      <form method="post">
+        <input type="hidden" name="action" value="create_product">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Product name</label>
+            <input type="text" class="form-control" name="name" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Price</label>
+            <input type="number" step="0.01" class="form-control" name="price" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" name="description" rows="2"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Category</label>
+            <select class="form-select" name="category_id" required>
+              {% for category in categories %}
+              <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-6 d-flex align-items-end">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="available" checked>
+              <label class="form-check-label">Available immediately</label>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary mt-3" type="submit">Add product</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="soft-card p-4 rounded-4 mt-4">
+  <h4 class="fw-bold mb-3">Current menu</h4>
+  {% if categories %}
+    {% for category in categories %}
+      <div class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0">{{ category.name }}</h5>
+          <span class="text-muted">{{ category.products|length }} items</span>
+        </div>
+        <div class="list-group">
+          {% for product in category.products %}
+            <div class="list-group-item bg-transparent border-0 border-bottom d-flex justify-content-between align-items-center">
+              <div>
+                <div class="fw-semibold">{{ product.name }}</div>
+                <div class="text-muted small">Ksh {{ '%.2f'|format(product.price) }}</div>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <form method="post" class="d-flex align-items-center gap-2">
+                  <input type="hidden" name="action" value="toggle_product">
+                  <input type="hidden" name="product_id" value="{{ product.id }}">
+                  <span class="status-chip {{ 'status-available' if product.available else 'status-reserved' }}">
+                    {{ 'Available' if product.available else 'Hidden' }}
+                  </span>
+                  <button class="btn btn-sm btn-outline-light" type="submit">Toggle</button>
+                </form>
+                <button class="btn btn-sm btn-outline-light" type="button" data-bs-toggle="collapse" data-bs-target="#edit-product-{{ product.id }}">Edit</button>
+                <form method="post" class="d-inline">
+                  <input type="hidden" name="action" value="delete_product">
+                  <input type="hidden" name="product_id" value="{{ product.id }}">
+                  <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                </form>
+              </div>
+            </div>
+            <div class="collapse mt-2" id="edit-product-{{ product.id }}">
+              <form method="post" class="card card-body bg-dark border-0">
+                <input type="hidden" name="action" value="edit_product">
+                <input type="hidden" name="product_id" value="{{ product.id }}">
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" name="name" value="{{ product.name }}" required>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Price</label>
+                    <input type="number" step="0.01" class="form-control" name="price" value="{{ product.price }}" required>
+                  </div>
+                  <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" name="category_id" required>
+                      {% for category in categories %}
+                      <option value="{{ category.id }}" {% if category.id == product.category_id %}selected{% endif %}>{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="col-md-2 d-flex align-items-end">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="available" {% if product.available %}checked{% endif %}>
+                      <label class="form-check-label">Live</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control" name="description" rows="2">{{ product.description or '' }}</textarea>
+                  </div>
+                </div>
+                <button class="btn btn-primary mt-3" type="submit">Save changes</button>
+              </form>
+            </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted mb-0">No menu items yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

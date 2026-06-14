@@ -1,0 +1,51 @@
+{% extends "layouts/base.html" %}
+{% block title %}Receipt - RestroPro{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h2 class="fw-bold mb-1">Receipt</h2>
+          <p class="text-muted mb-0">Order #{{ order.id }}</p>
+        </div>
+        <span class="badge bg-success text-dark">{{ order.status|title }}</span>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <p class="mb-1"><strong>Table:</strong> {{ order.table_id }}</p>
+          <p class="mb-1"><strong>Payment:</strong> {{ order.payment_status|title }}</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p class="mb-1"><strong>Total:</strong> Ksh {{ '%.2f'|format(order.total_amount) }}</p>
+          <p class="mb-0"><strong>Status:</strong> {{ order.status|title }}</p>
+        </div>
+      </div>
+
+      <h5 class="fw-bold mb-3">Items</h5>
+      {% if order.items %}
+        {% for item in order.items %}
+        <div class="d-flex justify-content-between align-items-start border-bottom py-2">
+          <div>
+            <div class="fw-semibold">{{ item.product.name if item.product else 'Item' }}</div>
+            {% if item.notes %}
+            <small class="text-muted">Note: {{ item.notes }}</small>
+            {% endif %}
+          </div>
+          <div class="text-end">
+            <div>x{{ item.quantity }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted mb-0">No items recorded.</p>
+      {% endif %}
+
+      <div class="text-end mt-4">
+        <a href="{{ url_for('customer.orders') }}" class="btn btn-outline-dark">Back to orders</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

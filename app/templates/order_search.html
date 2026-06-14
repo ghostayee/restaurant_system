@@ -1,0 +1,65 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Order Search - RestroPro{% endblock %}
+
+{% block content %}
+<div class="hero-panel p-4 p-md-5 mb-4">
+  <div class="row align-items-center">
+    <div class="col-lg-8">
+      <p class="text-accent fw-semibold mb-2">Service tools</p>
+      <h1 class="display-6 fw-bold mb-2">Search orders quickly</h1>
+      <p class="text-white-50 mb-0">Filter current orders by status or table to keep service moving smoothly.</p>
+    </div>
+  </div>
+</div>
+
+<div class="soft-card p-4 rounded-4 mb-4">
+  <form method="get" class="row g-3 align-items-end">
+    <div class="col-md-5">
+      <label class="form-label">Status</label>
+      <select class="form-select" name="status">
+        <option value="">All statuses</option>
+        {% for value in ['pending', 'preparing', 'ready', 'completed', 'cancelled'] %}
+        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ value|title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-5">
+      <label class="form-label">Table</label>
+      <input type="text" class="form-control" name="table" value="{{ table_filter }}" placeholder="e.g. T8">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100" type="submit">Filter</button>
+    </div>
+  </form>
+</div>
+
+<div class="soft-card p-4 rounded-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold mb-0">Orders</h4>
+    <span class="price-badge">{{ orders|length }} result{% if orders|length != 1 %}s{% endif %}</span>
+  </div>
+
+  {% if orders %}
+    <div class="d-flex flex-column gap-3">
+      {% for order in orders %}
+      <div class="rounded-3 p-3" style="background: rgba(255,212,0,0.06); border: 1px solid rgba(255,212,0,0.18);">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <h6 class="fw-bold mb-1">Order #{{ order.id }}</h6>
+            <p class="text-muted mb-1">Table: {{ order.table_id }} · Status: {{ order.status|title }} · Total: Ksh {{ '%.2f'|format(order.total_amount) }}</p>
+            <small class="text-muted">Placed: {{ order.created_at.strftime('%Y-%m-%d %H:%M') if order.created_at else 'N/A' }}</small>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <span class="status-chip status-occupied">{{ order.status|title }}</span>
+            <a href="{{ url_for('main.order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline-light">View</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted mb-0">No matching orders found.</p>
+  {% endif %}
+</div>
+{% endblock %}

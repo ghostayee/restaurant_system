@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+{% block title %}Inventory - RestroPro{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="soft-card p-4 rounded-4">
+      <h3 class="fw-bold mb-3">Add inventory item</h3>
+      <form method="post">
+        <div class="mb-3">
+          <label class="form-label">Item name</label>
+          <input type="text" name="item_name" class="form-control" required>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <label class="form-label">Quantity</label>
+            <input type="number" name="quantity" class="form-control" value="0" min="0">
+          </div>
+          <div class="col-6">
+            <label class="form-label">Unit</label>
+            <input type="text" name="unit" class="form-control" value="unit">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Minimum level</label>
+          <input type="number" name="minimum_level" class="form-control" value="0" min="0">
+        </div>
+        <button class="btn btn-primary w-100" type="submit">Save item</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="soft-card p-4 rounded-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h3 class="fw-bold mb-1">Inventory overview</h3>
+          <p class="text-muted mb-0">Track stock levels and low-stock alerts.</p>
+        </div>
+      </div>
+
+      {% if low_stock_items %}
+      <div class="alert alert-warning">
+        Low stock: {% for item in low_stock_items %}{{ item.item_name }}{% if not loop.last %}, {% endif %}{% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="table-responsive">
+        <table class="table table-dark table-striped align-middle">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Unit</th>
+              <th>Minimum</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr>
+              <td>{{ item.item_name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.unit }}</td>
+              <td>{{ item.minimum_level }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4" class="text-muted">No inventory items yet.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

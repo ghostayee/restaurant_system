@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+{% block title %}Kitchen Dashboard - RestroPro{% endblock %}
+{% block content %}
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h1 class="display-5 fw-bold">Kitchen Dashboard</h1>
+    <p class="lead">Live order queue for chefs and kitchen staff</p>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <div class="card text-center p-4 h-100">
+      <h2 class="text-warning">{{ pending_orders|length }}</h2>
+      <p class="text-muted mb-0">Pending</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-4 h-100">
+      <h2 class="text-info">{{ preparing_orders|length }}</h2>
+      <p class="text-muted mb-0">Preparing</p>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card text-center p-4 h-100">
+      <h2 class="text-success">{{ ready_orders|length }}</h2>
+      <p class="text-muted mb-0">Ready</p>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  {% for order in orders %}
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h5 class="fw-bold mb-1">Order #{{ order.id }}</h5>
+            <p class="text-muted mb-0">Table {{ order.table_id }} · Total Ksh {{ '%.2f'|format(order.total_amount) }}</p>
+          </div>
+          <span class="badge bg-info text-dark">{{ order.status|title }}</span>
+        </div>
+        <form method="post" action="{{ url_for('kitchen.update_order_status', order_id=order.id) }}" class="d-flex gap-2">
+          <select name="status" class="form-select form-select-sm">
+            <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+            <option value="preparing" {% if order.status == 'preparing' %}selected{% endif %}>Preparing</option>
+            <option value="ready" {% if order.status == 'ready' %}selected{% endif %}>Ready</option>
+            <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>Completed</option>
+            <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+          </select>
+          <button class="btn btn-sm btn-primary" type="submit">Update</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
